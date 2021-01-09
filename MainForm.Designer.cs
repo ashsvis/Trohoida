@@ -29,7 +29,13 @@ namespace Trohoida
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.timerAnimate = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
+            // 
+            // timerAnimate
+            // 
+            this.timerAnimate.Tick += new System.EventHandler(this.timerAnimate_Tick);
             // 
             // MainForm
             // 
@@ -46,6 +52,8 @@ namespace Trohoida
         }
 
         #endregion
+
+        private System.Windows.Forms.Timer timerAnimate;
     }
 }
 
