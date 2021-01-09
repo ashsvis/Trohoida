@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -87,10 +88,24 @@ namespace Trohoida
         /// <param name="e"></param>
         private void MainForm_Paint(object sender, PaintEventArgs e)
         {
+            var gr = e.Graphics;
+            // рисуем окружность
+            using (var path = new GraphicsPath())
+            {
+                path.AddEllipse(new RectangleF(-0.5f, -0.5f, 1f, 1f));
+                using (var m = new Matrix())
+                {
+                    m.Translate(offset.Width, offset.Height - R);
+                    m.Scale(R, R);
+                    gr.Transform = m;
+                    gr.DrawPath(Pens.AliceBlue, path);
+                    gr.ResetTransform();
+                }
+            }
             // рисуем ось X
-            e.Graphics.DrawLine(Pens.Black, new PointF(xmin, ymax), new PointF(xmax, ymax));
+            gr.DrawLine(Pens.Black, new PointF(xmin, ymax), new PointF(xmax, ymax));
             // рисуем ось Y
-            e.Graphics.DrawLine(Pens.Black, new PointF(xzero, ymin), new PointF(xzero, ymax * 1.1f));
+            gr.DrawLine(Pens.Black, new PointF(xzero, ymin), new PointF(xzero, ymax * 1.1f));
             // рисуем трохоиду
             if (count > 1 && count <= points.Length)
             {
@@ -100,7 +115,7 @@ namespace Trohoida
                 Array.Copy(points, array, count);
                 // рисуем точки рабочего массива
                 using (var pen = new Pen(Color.Red, 3f))
-                    e.Graphics.DrawLines(pen, array);
+                    gr.DrawLines(pen, array);
             }
         }
     }
